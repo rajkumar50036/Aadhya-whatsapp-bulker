@@ -1,0 +1,28 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# Virtual environments
+.env
+.venv/
+env/
+venv/
+ENV/
+
+# User data & sessions (Private & Sensitive)
+user_profiles/*
+!user_profiles/.gitkeep
+whatsapp_profile/
+users.json
+history.json
+
+# Uploaded media files
+uploads/*
+!uploads/.gitkeep
+
+# OS generated files
+Thumbs.db
+.DS_Store
+*.tmp

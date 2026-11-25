@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aadhya WhatsApp Bulker - Login & Sign Up</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: radial-gradient(circle at 50% 20%, #152238 0%, #080d1a 80%);
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: rgba(21, 29, 48, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 36px 32px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 24px rgba(37, 211, 102, 0.1);
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .auth-logo {
+      font-size: 50px;
+      color: #25d366;
+      margin-bottom: 12px;
+      display: inline-block;
+      filter: drop-shadow(0 4px 12px rgba(37, 211, 102, 0.3));
+    }
+
+    .auth-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .auth-header p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .auth-tabs {
+      display: flex;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 24px;
+      gap: 4px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .auth-tab.active {
+      background: #1e293b;
+      color: var(--primary-green);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      color: var(--text-dim);
+      font-size: 16px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .input-wrapper input.auth-input,
+    .auth-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 13px 40px 13px 54px !important;
+      color: var(--text-main);
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .auth-input:focus {
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+
+    .toggle-pwd {
+      position: absolute;
+      right: 14px;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0;
+    }
+
+    .toggle-pwd:hover {
+      color: var(--text-main);
+    }
+
+    .btn-auth {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 13px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .btn-auth:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .auth-alert {
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .auth-alert.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    .auth-alert.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6ee7b7;
+    }
+
+    .auth-footer {
+      margin-top: 22px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .auth-footer a {
+      color: var(--primary-green);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .auth-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <i class="fa-brands fa-whatsapp auth-logo"></i>
+      <h1>Aadhya WhatsApp Bulker</h1>
+      <p id="authSubtitle">Login with Mobile & Password to Connect Your Personal WhatsApp</p>
+    </div>
+
+    <!-- Error/Success Message Display -->
+    <div id="alertBox" class="auth-alert" style="display: none;"></div>
+
+    <!-- Toggle Tabs: Login vs Sign Up -->
+    <div class="auth-tabs">
+      <button id="tabLogin" class="auth-tab active" onclick="switchTab('login')">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+      </button>
+      <button id="tabRegister" class="auth-tab" onclick="switchTab('register')">
+        <i class="fa-solid fa-user-plus"></i> Sign Up
+      </button>
+    </div>
+
+    <!-- 1. LOGIN FORM -->
+    <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)" autocomplete="off">
+      <div class="form-group">
+        <label for="loginMobile">Mobile Number</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-phone input-icon"></i>
+          <input type="tel" id="loginMobile" class="auth-input" placeholder="Enter mobile number" required autocomplete="off" value="" style="padding-left: 54px !important;" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input type="password" id="loginPassword" class="auth-input" placeholder="Enter your password" required autocomplete="current-password" style="padding-left: 54px !important;" />
+          <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility('loginPassword', this)">
+            <i class="fa-regular fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" id="btnLoginSubmit" class="btn-auth">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Login to Dashboard
+      </button>
+
+      <div class="auth-footer">
+        Don't have an account? <a onclick="switchTab('register')">Sign Up here</a>
+      </div>
+    </form>
+
+    <!-- 2. SIGN UP FORM -->
+    <form id="registerForm" class="auth-form" style="display: none;" onsubmit="handleRegister(event)" autocomplete="off">
+      <div class="form-group">
+        <label for="regMobile">Mobile Number</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-phone input-icon"></i>
+          <input type="tel" id="regMobile" class="auth-input" placeholder="Enter mobile number" required autocomplete="off" value="" style="padding-left: 54px !important;" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regPassword">Create Password</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input type="password" id="regPassword" class="auth-input" placeholder="Create a password (min 4 characters)" minlength="4" required autocomplete="new-password" style="padding-left: 54px !important;" />
+          <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility('regPassword', this)">
+            <i class="fa-regular fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regConfirmPassword">Confirm Password</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-check-double input-icon"></i>
+          <input type="password" id="regConfirmPassword" class="auth-input" placeholder="Re-enter password to confirm" minlength="4" required autocomplete="new-password" style="padding-left: 54px !important;" />
+          <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility('regConfirmPassword', this)">
+            <i class="fa-regular fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" id="btnRegisterSubmit" class="btn-auth">
+        <i class="fa-solid fa-user-plus"></i> Sign Up & Connect WhatsApp
+      </button>
+
+      <div class="auth-footer">
+        Already have an account? <a onclick="switchTab('login')">Login here</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let currentMode = 'login';
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Force-clear any browser autofill values
+      const mInput = document.getElementById("loginMobile");
+      const pInput = document.getElementById("loginPassword");
+      if (mInput) mInput.value = "";
+      if (pInput) pInput.value = "";
+      setTimeout(() => {
+        if (mInput) mInput.value = "";
+        if (pInput) pInput.value = "";
+      }, 150);
+
+      try {
+        const res = await fetch("/api/auth/status");
+        const data = await res.json();
+        if (!data.has_users) {
+          switchTab('register');
+          showAlert("Welcome to Aadhya WhatsApp Bulker! Please sign up with your mobile number to connect your personal WhatsApp.", "success");
+        }
+      } catch (e) {}
+    });
+
+    function switchTab(tab) {
+      currentMode = tab;
+      const tabLogin = document.getElementById("tabLogin");
+      const tabRegister = document.getElementById("tabRegister");
+      const loginForm = document.getElementById("loginForm");
+      const registerForm = document.getElementById("registerForm");
+      const subtitle = document.getElementById("authSubtitle");
+
+      hideAlert();
+
+      if (tab === 'login') {
+        tabLogin.classList.add("active");
+        tabRegister.classList.remove("active");
+        loginForm.style.display = "flex";
+        registerForm.style.display = "none";
+        subtitle.textContent = "Login with Mobile & Password to Connect Your Personal WhatsApp";
+        document.getElementById("loginMobile").focus();
+      } else {
+        tabLogin.classList.remove("active");
+        tabRegister.classList.add("active");
+        loginForm.style.display = "none";
+        registerForm.style.display = "flex";
+        subtitle.textContent = "Sign Up with Mobile & Create Password";
+        document.getElementById("regMobile").focus();
+      }
+    }
+
+    function togglePasswordVisibility(fieldId, btn) {
+      const field = document.getElementById(fieldId);
+      const icon = btn.querySelector("i");
+      if (field.type === "password") {
+        field.type = "text";
+        icon.className = "fa-regular fa-eye-slash";
+      } else {
+        field.type = "password";
+        icon.className = "fa-regular fa-eye";
+      }
+    }
+
+    function showAlert(msg, type = "error") {
+      const box = document.getElementById("alertBox");
+      box.className = `auth-alert ${type}`;
+      box.innerHTML = `<i class="fa-solid ${type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-check'}"></i> <span>${msg}</span>`;
+      box.style.display = "flex";
+    }
+
+    function hideAlert() {
+      const box = document.getElementById("alertBox");
+      box.style.display = "none";
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      hideAlert();
+
+      const mobile = document.getElementById("loginMobile").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      const btn = document.getElementById("btnLoginSubmit");
+
+      if (!mobile || mobile.replace(/\D/g, "").length < 7) {
+        showAlert("Please enter a valid mobile number.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Logging in...';
+
+      try {
+        const res = await fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mobile, password })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showAlert("Login successful! Redirecting...", "success");
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 600);
+        } else {
+          showAlert(data.message || "Invalid mobile number or password.");
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Login to Dashboard';
+        }
+      } catch (err) {
+        showAlert("Server error during login: " + err);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Login to Dashboard';
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      hideAlert();
+
+      const mobile = document.getElementById("regMobile").value.trim();
+      const password = document.getElementById("regPassword").value;
+      const confirmPassword = document.getElementById("regConfirmPassword").value;
+      const btn = document.getElementById("btnRegisterSubmit");
+
+      if (!mobile || mobile.replace(/\D/g, "").length < 7) {
+        showAlert("Please enter a valid mobile number.");
+        return;
+      }
+
+      if (password.length < 4) {
+        showAlert("Password must be at least 4 characters long.");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showAlert("Passwords do not match. Please re-enter.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signing up...';
+
+      try {
+        const res = await fetch("/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mobile, password })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showAlert("Account created! Logging in to your personal WhatsApp bulker...", "success");
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 800);
+        } else {
+          showAlert(data.message || "Could not sign up.");
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Sign Up & Connect WhatsApp';
+        }
+      } catch (err) {
+        showAlert("Server error: " + err);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Sign Up & Connect WhatsApp';
+      }
+    }
+  </script>
+</body>
+</html>

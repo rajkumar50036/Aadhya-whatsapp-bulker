@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aadhya WhatsApp Bulker - 3-Window Hub</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand">
+        <i class="fa-brands fa-whatsapp brand-icon"></i>
+        <div>
+          <h1>Aadhya WhatsApp Bulker</h1>
+          <p class="subtitle">Personal WhatsApp Hub: Phone Number • Message Box • Media Sender</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div id="statusBadge" class="status-badge status-disconnected">
+          <span class="status-dot"></span>
+          <span id="statusText">Disconnected</span>
+        </div>
+        <button id="btnConnect" class="btn btn-connect" onclick="connectWhatsApp()">
+          <i class="fa-solid fa-qrcode"></i> Connect WhatsApp (QR)
+        </button>
+        <div class="user-pill">
+          <i class="fa-solid fa-user"></i>
+          <span id="userMobileDisplay">User</span>
+          <a href="/logout" class="btn-logout" title="Logout & Relogin">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main 3-Window Grid Container -->
+    <main class="windows-grid">
+      <!-- WINDOW 1: PHONE NUMBER & CONNECTION -->
+      <section class="window-card win-1">
+        <div class="window-header">
+          <div class="win-title">
+            <span class="win-badge badge-blue">Window 1</span>
+            <h2><i class="fa-solid fa-phone"></i> Enter Phone Number</h2>
+          </div>
+          <span class="win-info">Recipient & Link</span>
+        </div>
+        
+        <div class="window-body">
+          <div class="session-box">
+            <label>WhatsApp Link Status</label>
+            <div id="sessionStatusMsg" class="session-status">⚪ Click 'Connect WhatsApp' to link session</div>
+          </div>
+
+          <!-- Live QR Code Card inside Window 1 -->
+          <div id="qrBox" class="qr-box" style="display: none;">
+            <div class="qr-header">
+              <i class="fa-solid fa-qrcode"></i>
+              <span>Scan QR Code with Phone</span>
+            </div>
+            <div class="qr-img-wrapper">
+              <img id="qrImage" src="" alt="WhatsApp QR Code" />
+              <div id="qrLoading" class="qr-loading">Generating QR code...</div>
+            </div>
+            <div class="qr-instructions">
+              <p>1. Open WhatsApp on your phone</p>
+              <p>2. Tap <b>Linked Devices</b> > <b>Link a Device</b></p>
+              <p>3. Point your camera at this code</p>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="manualRefreshQR()" style="margin-top: 6px; width: 100%;">
+              <i class="fa-solid fa-arrows-rotate"></i> Refresh QR Code
+            </button>
+          </div>
+
+          <!-- Mode Switcher: Single vs Bulk Numbers -->
+          <div class="mode-tabs">
+            <button id="tabSingle" class="mode-tab active" onclick="switchCustomerMode('single')">
+              <i class="fa-solid fa-user"></i> Single Number
+            </button>
+            <button id="tabBulk" class="mode-tab" onclick="switchCustomerMode('bulk')">
+              <i class="fa-solid fa-users"></i> Bulk Numbers
+            </button>
+          </div>
+
+          <!-- Single Mode View -->
+          <div id="singleModeView">
+            <div class="form-group">
+              <label for="countryCode"><i class="fa-solid fa-globe"></i> Country Code</label>
+              <select id="countryCode" onchange="updatePhonePreview()">
+                <option value="91" selected>India (+91)</option>
+                <option value="1">USA / Canada (+1)</option>
+                <option value="44">United Kingdom (+44)</option>
+                <option value="971">United Arab Emirates (+971)</option>
+                <option value="966">Saudi Arabia (+966)</option>
+                <option value="61">Australia (+61)</option>
+                <option value="49">Germany (+49)</option>
+                <option value="33">France (+33)</option>
+                <option value="92">Pakistan (+92)</option>
+                <option value="880">Bangladesh (+880)</option>
+                <option value="65">Singapore (+65)</option>
+                <option value="60">Malaysia (+60)</option>
+                <option value="55">Brazil (+55)</option>
+                <option value="">Other (Type with Code)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="phoneInput"><i class="fa-solid fa-mobile-screen"></i> Phone Number</label>
+              <input 
+                type="tel" 
+                id="phoneInput" 
+                placeholder="Enter mobile number" 
+                oninput="updatePhonePreview()"
+                autocomplete="off"
+                value=""
+              />
+              <div id="phoneTargetPreview" class="phone-preview">Target: None</div>
+            </div>
+
+            <div class="form-group">
+              <label for="recentHistory"><i class="fa-solid fa-clock-rotate-left"></i> Recent Numbers</label>
+              <select id="recentHistory" onchange="selectFromHistory()">
+                <option value="">Select from history...</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Bulk Numbers Mode View -->
+          <div id="bulkModeView" style="display: none;">
+            <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
+              <div class="bulk-header-row">
+                <label for="bulkNumbersInput"><i class="fa-solid fa-list-ol"></i> Phone Numbers</label>
+                <button class="btn btn-sm btn-outline" onclick="triggerCsvInput()">
+                  <i class="fa-solid fa-file-csv"></i> Import CSV / TXT
+                </button>
+                <input type="file" id="csvFileInput" accept=".csv,.txt" style="display: none;" onchange="handleCsvImport(event)">
+              </div>
+              <textarea 
+                id="bulkNumbersInput" 
+                placeholder="Paste customer phone numbers here (one per line or separated by comma)..."
+                rows="12"
+                oninput="updateBulkCount()"
+              ></textarea>
+              <div class="bulk-stats-row">
+                <span id="bulkCountBadge" class="badge-pill">0 customer numbers</span>
+                <span class="text-dim">Auto-cleans formatting & spaces</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WINDOW 2: MESSAGE BOX -->
+      <section class="window-card win-2">
+        <div class="window-header">
+          <div class="win-title">
+            <span class="win-badge badge-purple">Window 2</span>
+            <h2><i class="fa-solid fa-comment-dots"></i> Message Box</h2>
+          </div>
+          <span class="win-info">Text & Formatting</span>
+        </div>
+
+        <div class="window-body">
+          <div class="form-group">
+            <label for="templateSelect"><i class="fa-solid fa-bookmark"></i> Quick Template</label>
+            <select id="templateSelect" onchange="applyTemplate()">
+              <option value="">Choose a template...</option>
+              <option value="welcome">👋 Welcome & Greeting</option>
+              <option value="media">📸 Attached Photos & Videos Notice</option>
+              <option value="invoice">📄 Invoice & Order Update</option>
+              <option value="reminder">🔔 Follow-up / Appointment Reminder</option>
+            </select>
+          </div>
+
+          <!-- Formatting & Emoji Bar -->
+          <div class="toolbar">
+            <div class="btn-group">
+              <button class="tool-btn" title="Bold" onclick="wrapText('*')"><b>B</b></button>
+              <button class="tool-btn" title="Italic" onclick="wrapText('_')"><i>I</i></button>
+              <button class="tool-btn" title="Strikethrough" onclick="wrapText('~')"><s>S</s></button>
+              <button class="tool-btn" title="Code" onclick="wrapText('```')"><i class="fa-solid fa-code"></i></button>
+            </div>
+            <div class="emoji-group">
+              <button class="emoji-btn" onclick="insertEmoji('👍')">👍</button>
+              <button class="emoji-btn" onclick="insertEmoji('❤️')">❤️</button>
+              <button class="emoji-btn" onclick="insertEmoji('😊')">😊</button>
+              <button class="emoji-btn" onclick="insertEmoji('🙏')">🙏</button>
+              <button class="emoji-btn" onclick="insertEmoji('🎉')">🎉</button>
+              <button class="emoji-btn" onclick="insertEmoji('📸')">📸</button>
+              <button class="emoji-btn" onclick="insertEmoji('🎥')">🎥</button>
+            </div>
+          </div>
+
+          <!-- Message Textarea -->
+          <div class="form-group message-area-wrapper">
+            <textarea 
+              id="messageBox" 
+              placeholder="Write your WhatsApp message here... You can use emojis, formatting (*bold*, _italic_), and multiple paragraphs."
+              oninput="updateMessageCount()"
+            >Hello! Sending you this message along with the attached photos and videos.</textarea>
+          </div>
+
+          <div class="message-footer">
+            <span id="charCount">Characters: 0 | Words: 0</span>
+            <button class="btn-sm btn-outline" onclick="clearMessage()">Clear Text</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- WINDOW 3: SEND FILES (PHOTOS & VIDEOS) -->
+      <section class="window-card win-3">
+        <div class="window-header">
+          <div class="win-title">
+            <span class="win-badge badge-green">Window 3</span>
+            <h2><i class="fa-solid fa-photo-film"></i> Send Files (Media)</h2>
+          </div>
+          <span class="win-info">Photos & Videos</span>
+        </div>
+
+        <div class="window-body">
+          <!-- Dropzone -->
+          <div class="dropzone" id="dropzone" onclick="triggerFileInput()">
+            <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+            <p class="drop-text">Drag & drop <b>Photos & Videos</b> here</p>
+            <p class="drop-sub">or click to browse from your computer</p>
+            <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFileSelect(event)">
+          </div>
+
+          <!-- Quick Media Buttons -->
+          <div class="media-btn-row">
+            <button class="btn btn-photo" onclick="triggerPhotoInput()">
+              <i class="fa-solid fa-camera"></i> Photos
+            </button>
+            <button class="btn btn-video" onclick="triggerVideoInput()">
+              <i class="fa-solid fa-video"></i> Videos
+            </button>
+            <button class="btn btn-doc" onclick="triggerDocInput()">
+              <i class="fa-solid fa-file-lines"></i> Documents
+            </button>
+            <button class="btn btn-clear-files" onclick="clearAllFiles()" title="Clear All">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+
+          <!-- Hidden specialized inputs -->
+          <input type="file" id="photoInput" accept="image/*" multiple style="display: none;" onchange="handleFileSelect(event)">
+          <input type="file" id="videoInput" accept="video/*" multiple style="display: none;" onchange="handleFileSelect(event)">
+          <input type="file" id="docInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.csv" multiple style="display: none;" onchange="handleFileSelect(event)">
+
+          <!-- Attached Files List -->
+          <div class="attached-summary">
+            <span id="filesCount">Attached: 0 files</span>
+          </div>
+
+          <div class="files-list" id="filesList">
+            <div class="empty-files">
+              <i class="fa-regular fa-folder-open"></i>
+              <p>No photos, videos, or documents attached yet.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Action & Logs Section -->
+    <footer class="app-footer">
+      <!-- Bulk Live Progress Card (shown during campaigns) -->
+      <div id="bulkProgressCard" class="bulk-progress-card" style="display: none;">
+        <div class="bulk-prog-header">
+          <div class="bulk-prog-title">
+            <i class="fa-solid fa-bolt-lightning text-yellow"></i>
+            <span>Sending Bulk Numbers Campaign</span>
+          </div>
+          <button class="btn btn-sm btn-stop" onclick="stopBulkCampaign()">
+            <i class="fa-solid fa-circle-stop"></i> Stop Campaign
+          </button>
+        </div>
+        <div class="progress-bar-wrapper">
+          <div id="bulkProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+        <div class="bulk-counters-row">
+          <span>Progress: <b id="progCurrent">0</b> / <b id="progTotal">0</b></span>
+          <span class="text-green">✅ Sent: <b id="progSent">0</b></span>
+          <span class="text-red">❌ Failed: <b id="progFailed">0</b></span>
+          <span class="text-dim">Last: <span id="progLastCustomer">-</span></span>
+        </div>
+      </div>
+
+      <div class="send-row">
+        <button id="btnSend" class="btn btn-send" onclick="sendWhatsApp()">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span id="btnSendText">⚡ SEND TO SINGLE NUMBER</span>
+        </button>
+      </div>
+
+      <!-- Chat History (Saved Messages) Section -->
+      <section class="chat-history-card">
+        <div class="chat-history-header">
+          <div class="chat-history-title">
+            <i class="fa-solid fa-clock-rotate-left text-green"></i>
+            <h3>Chat History (Saved Messages)</h3>
+            <span id="chatHistoryCountBadge" class="badge-pill">0 sent</span>
+          </div>
+          <div class="chat-history-actions">
+            <button class="btn-sm btn-outline" onclick="exportChatHistoryCsv()" title="Download History as CSV">
+              <i class="fa-solid fa-download"></i> Export CSV
+            </button>
+            <button class="btn-sm btn-clear-history" onclick="clearChatHistory()" title="Clear Chat History">
+              <i class="fa-solid fa-trash-can"></i> Clear History
+            </button>
+          </div>
+        </div>
+        <div class="chat-history-table-wrapper">
+          <table class="chat-history-table">
+            <thead>
+              <tr>
+                <th style="width: 140px;">Time</th>
+                <th style="width: 160px;">Recipient</th>
+                <th>Message Snippet</th>
+                <th style="width: 150px;">Media Files</th>
+                <th style="width: 110px;">Status</th>
+              </tr>
+            </thead>
+            <tbody id="chatHistoryTableBody">
+              <tr class="empty-history-row">
+                <td colspan="5">
+                  <i class="fa-regular fa-comments"></i>
+                  <span>No chat history yet. Sent messages will be automatically saved and displayed here.</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

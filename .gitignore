@@ -22,6 +22,10 @@ history.json
 uploads/*
 !uploads/.gitkeep
 
+# Executables & Binaries
+cloudflared.exe
+*.exe
+
 # OS generated files
 Thumbs.db
 .DS_Store

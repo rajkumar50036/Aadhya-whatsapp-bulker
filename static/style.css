@@ -901,3 +901,108 @@ textarea#bulkNumbersInput {
   align-items: center;
   gap: 4px;
 }
+
+/* Mobile & Tablet Responsiveness for All Devices */
+@media (max-width: 1080px) {
+  .windows-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-layout {
+    padding: 10px 12px;
+    gap: 12px;
+  }
+
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .header-actions {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .brand-icon {
+    font-size: 32px;
+  }
+
+  .brand h1 {
+    font-size: 19px;
+  }
+
+  .brand .subtitle {
+    font-size: 11.5px;
+  }
+
+  .btn-connect {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .mode-tabs {
+    flex-direction: row;
+  }
+
+  .toolbar {
+    gap: 4px;
+  }
+
+  .emoji-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .media-btn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .btn-clear-files {
+    grid-column: span 2;
+  }
+
+  .btn-send {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .chat-history-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .chat-history-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand {
+    gap: 10px;
+  }
+
+  .brand-icon {
+    font-size: 28px;
+  }
+
+  .brand h1 {
+    font-size: 17px;
+  }
+
+  .btn-send {
+    font-size: 13px;
+    padding: 12px;
+  }
+}

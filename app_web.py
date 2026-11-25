@@ -474,8 +474,16 @@ def stop_bulk_campaign():
     return jsonify({"success": True, "message": "Bulk campaign stopped"})
 
 if __name__ == "__main__":
+    import socket
+    local_ip = "127.0.0.1"
+    try:
+        local_ip = socket.gethostbyname(socket.gethostname())
+    except Exception:
+        pass
+
     print("\n" + "="*60)
     print("🚀 Aadhya WhatsApp Bulker")
-    print("👉 Open in your browser at: http://127.0.0.1:5000")
+    print(f"👉 Local PC:        http://127.0.0.1:5000")
+    print(f"👉 Mobile / Tablet: http://{local_ip}:5000 (Same Wi-Fi)")
     print("="*60 + "\n")
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=False)

@@ -24,6 +24,7 @@ uploads/*
 
 # Executables & Binaries
 cloudflared.exe
+config.yml
 *.exe
 
 # OS generated files

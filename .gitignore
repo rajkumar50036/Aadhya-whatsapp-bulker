@@ -26,6 +26,13 @@ uploads/*
 cloudflared.exe
 config.yml
 *.exe
+*.apk
+*.spec
+build/
+dist/
+.gradle/
+android/**/build/
+android/.gradle/
 
 # OS generated files
 Thumbs.db

@@ -19,11 +19,20 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from whatsapp_engine import WhatsAppEngine
 
-app = Flask(__name__)
+if getattr(sys, 'frozen', False):
+    # PyInstaller bundle directory
+    bundle_dir = getattr(sys, '_MEIPASS', os.path.dirname(sys.executable))
+    template_folder = os.path.join(bundle_dir, "templates")
+    static_folder = os.path.join(bundle_dir, "static")
+    app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
+    BASE_DIR = os.path.dirname(sys.executable)
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    app = Flask(__name__)
+
 app.secret_key = "whatsapp_automation_studio_secret_2026_xyz"
 CORS(app)
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
 HISTORY_FILE = os.path.join(BASE_DIR, "history.json")
 USERS_FILE = os.path.join(BASE_DIR, "users.json")

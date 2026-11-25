@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accent">#34d399</color>
+    <color name="bg_dark">#0f172a</color>
+    <color name="border_color">#334155</color>
+    <color name="card_bg">#1e293b</color>
+    <color name="primary">#10b981</color>
+    <color name="primary_dark">#059669</color>
+    <color name="text_gray">#94a3b8</color>
+    <color name="text_white">#f8fafc</color>
+    <string name="accessibility_desc">Enables automatic sending of bulk WhatsApp messages for Aadhya WhatsApp Bulker.</string>
+    <string name="app_name">Aadhya WhatsApp Bulker</string>
+    <style name="Theme.AadhyaWhatsAppBulker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/text_white</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+        <item name="android:statusBarColor">@color/bg_dark</item>
+    </style>
+</resources>
